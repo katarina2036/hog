@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Хогвартс — Твой путь волшебника | Фельцан Екатерина</title>
+<style>
+  :root {
+    --gold: #c9a227;
+    --dark: #1a1a2e;
+    --darker: #0f0f1a;
+    --parchment: #f4e4c1;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Georgia', serif;
+    background: var(--darker);
+    color: var(--parchment);
+    min-height: 100vh;
+  }
+  header {
+    text-align: center;
+    padding: 40px 20px 20px;
+    background: linear-gradient(180deg, #0f0f1a 0%, #1a1a2e 100%);
+    border-bottom: 2px solid var(--gold);
+  }
+  header h1 {
+    font-size: 2.5em;
+    color: var(--gold);
+    text-shadow: 0 0 20px rgba(201,162,39,0.5);
+    letter-spacing: 3px;
+  }
+  header p { color: #aaa; margin-top: 10px; font-style: italic; }
+
+  /* <!-- ДОБАВЛЕНО: автор в шапке --> */
+  header .author {
+    margin-top: 15px;
+    color: var(--gold);
+    font-size: 1em;
+    letter-spacing: 1px;
+  }
+  header .author strong { color: var(--parchment); }
+
+  nav {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    padding: 15px;
+    background: var(--dark);
+    flex-wrap: wrap;
+  }
+  nav button {
+    background: transparent;
+    border: 2px solid var(--gold);
+    color: var(--gold);
+    padding: 10px 20px;
+    font-family: inherit;
+    font-size: 0.95em;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: all 0.3s;
+  }
+  nav button:hover, nav button.active {
+    background: var(--gold);
+    color: var(--dark);
+    box-shadow: 0 0 15px rgba(201,162,39,0.6);
+  }
+
+  main { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+  section { display: none; animation: fadeIn 0.5s; }
+  section.active { display: block; }
+  @keyframes fadeIn { from {opacity:0; transform:translateY(10px);} to {opacity:1; transform:translateY(0);} }
+
+  h2 { color: var(--gold); margin-bottom: 25px; text-align: center; font-size: 1.8em; }
+
+  /* Тесты */
+  .quiz-box {
+    background: var(--dark);
+    border: 2px solid #333;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.5);
+  }
+  .question { font-size: 1.2em; margin-bottom: 20px; color: var(--parchment); }
+  .answers { display: flex; flex-direction: column; gap: 10px; }
+  .answers button {
+    text-align: left;
+    padding: 15px 20px;
+    background: #23233f;
+    border: 2px solid #444;
+    color: var(--parchment);
+    font-family: inherit;
+    font-size: 1em;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .answers button:hover {
+    border-color: var(--gold);
+    background: #2d2d4a;
+    transform: translateX(5px);
+  }
+  .progress { margin-top: 20px; height: 8px; background: #333; border-radius: 4px; overflow: hidden; }
+  .progress-bar { height: 100%; background: var(--gold); width: 0%; transition: width 0.4s; }
+  .counter { text-align: center; color: #888; margin-top: 10px; }
+
+  .result { text-align: center; padding: 30px; }
+  .result .house-name {
+    font-size: 2.5em;
+    font-weight: bold;
+    margin: 20px 0;
+    text-shadow: 0 0 20px currentColor;
+  }
+  .result .house-desc { font-size: 1.1em; line-height: 1.6; color: #ccc; margin: 20px 0; }
+  .result .crest { font-size: 5em; margin-bottom: 10px; }
+  .scores { color: #aaa; }
+
+  .gryffindor { color: #ae0001; }
+  .slytherin { color: #2a9d8f; }
+  .ravenclaw { color: #4a6fa5; }
+  .hufflepuff { color: #ecb939; }
+
+  /* Патронус */
+  .patronus-result .patronus-animal {
+    font-size: 3.5em;
+    color: #9ad0ff;
+    text-shadow: 0 0 30px rgba(154, 208, 255, 0.8);
+    margin: 20px 0;
+    font-weight: bold;
+  }
+  .patronus-result .patronus-desc {
+    font-size: 1.1em;
+    color: #ccc;
+    line-height: 1.6;
+    margin: 15px 0;
+  }
+  .patronus-glow {
+    font-size: 5em;
+    filter: drop-shadow(0 0 20px #9ad0ff);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { filter: drop-shadow(0 0 20px #9ad0ff); }
+    50% { filter: drop-shadow(0 0 40px #9ad0ff); }
+  }
+
+  /* Генератор палочки */
+  .wand-box {
+    background: var(--dark);
+    border: 2px solid #333;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.5);
+  }
+  .wand-field { margin-bottom: 20px; }
+  .wand-field label {
+    display: block;
+    color: var(--gold);
+    margin-bottom: 8px;
+    font-size: 1em;
+  }
+  .wand-field select {
+    width: 100%;
+    padding: 12px 15px;
+    font-family: inherit;
+    font-size: 1em;
+    background: #23233f;
+    border: 2px solid #444;
+    color: var(--parchment);
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .wand-field select:focus { outline: none; border-color: var(--gold); }
+
+  .wand-result {
+    margin-top: 25px;
+    padding: 25px;
+    background: linear-gradient(135deg, #1a1a2e 0%, #23233f 100%);
+    border: 2px solid var(--gold);
+    border-radius: 10px;
+    text-align: center;
+    animation: fadeIn 0.5s;
+  }
+  .wand-result .wand-icon {
+    font-size: 4em;
+    margin-bottom: 15px;
+    filter: drop-shadow(0 0 15px rgba(201,162,39,0.6));
+  }
+  .wand-result .wand-title {
+    font-size: 1.5em;
+    color: var(--gold);
+    margin-bottom: 15px;
+    font-weight: bold;
+  }
+  .wand-result .wand-desc {
+    color: #ccc;
+    line-height: 1.7;
+    font-size: 1.05em;
+  }
+
+  .btn {
+    background: var(--gold);
+    color: var(--dark);
+    border: none;
+    padding: 12px 30px;
+    font-family: inherit;
+    font-size: 1em;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: transform 0.2s;
+  }
+  .btn:hover { transform: scale(1.05); }
+
+  /* Заклинания */
+  .search-box {
+    width: 100%;
+    padding: 12px 18px;
+    font-size: 1em;
+    font-family: inherit;
+    background: var(--dark);
+    border: 2px solid #333;
+    border-radius: 8px;
+    color: var(--parchment);
+    margin-bottom: 25px;
+  }
+  .search-box:focus { outline: none; border-color: var(--gold); }
+  .spell-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; }
+  .spell-card {
+    background: var(--dark);
+    border: 1px solid #333;
+    border-left: 4px solid var(--gold);
+    border-radius: 8px;
+    padding: 18px;
+    transition: all 0.3s;
+  }
+  .spell-card:hover { border-color: var(--gold); transform: translateY(-3px); box-shadow: 0 5px 20px rgba(201,162,39,0.2); }
+  .spell-name { color: var(--gold); font-size: 1.3em; font-weight: bold; }
+  .spell-type { font-size: 0.85em; color: #888; text-transform: uppercase; letter-spacing: 1px; margin: 5px 0; }
+  .spell-desc { color: #ccc; font-size: 0.95em; line-height: 1.5; margin-top: 8px; }
+  .empty { color: #888; grid-column: 1/-1; text-align: center; }
+
+  /* Контакты */
+  .contact-box {
+    background: var(--dark);
+    border: 2px solid #333;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.5);
+  }
+  .contact-field { margin-bottom: 20px; }
+  .contact-field label {
+    display: block;
+    color: var(--gold);
+    margin-bottom: 8px;
+    font-size: 1em;
+  }
+  .contact-field input,
+  .contact-field textarea {
+    width: 100%;
+    padding: 12px 15px;
+    font-family: inherit;
+    font-size: 1em;
+    background: #23233f;
+    border: 2px solid #444;
+    color: var(--parchment);
+    border-radius: 8px;
+    resize: vertical;
+  }
+  .contact-field input:focus,
+  .contact-field textarea:focus {
+    outline: none;
+    border-color: var(--gold);
+  }
+  .contact-preview {
+    margin-top: 25px;
+    padding: 25px;
+    background: linear-gradient(135deg, #1a1a2e 0%, #23233f 100%);
+    border: 2px solid var(--gold);
+    border-radius: 10px;
+    text-align: center;
+    animation: fadeIn 0.5s;
+  }
+  .contact-preview .contact-name {
+    font-size: 1.6em;
+    color: var(--gold);
+    margin-bottom: 15px;
+    font-weight: bold;
+  }
+  .contact-preview .contact-line {
+    color: #ccc;
+    line-height: 1.8;
+    font-size: 1.05em;
+  }
+  .contact-preview .contact-line strong { color: var(--parchment); }
+
+  .footer-contact {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #333;
+    color: #888;
+    font-size: 0.9em;
+    line-height: 1.7;
+  }
+  .footer-contact strong { color: var(--gold); }
+
+  footer {
+    text-align: center;
+    padding: 30px 20px;
+    color: #555;
+    font-size: 0.9em;
+    border-top: 1px solid #333;
+  }
+
+  @media (max-width: 600px) {
+    header h1 { font-size: 1.8em; }
+    nav button { padding: 8px 14px; font-size: 0.85em; }
+    main { padding: 25px 15px; }
+    .quiz-box, .wand-box, .contact-box { padding: 20px; }
+    .result .house-name { font-size: 1.8em; }
+    .patronus-result .patronus-animal { font-size: 2.5em; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>⚡ ХОГВАРТС ⚡</h1>
+  <p>«Не важно, что ты родился в мире маглов. Важно, что ты волшебник.»</p>
+  <!-- ДОБАВЛЕНО: автор -->
+  <p class="author">Автор проекта: <strong>Фельцан Екатерина Анатольевна</strong></p>
+</header>
+
+<nav>
+  <button class="active" data-section="quiz">Шляпа</button>
+  <button data-section="patronus">Патронус</button>
+  <button data-section="wand">Палочка</button>
+  <button data-section="spells">Заклинания</button>
+  <button data-section="contacts">Контакты</button>
+</nav>
+
+<main>
+  <!-- РАСПРЕДЕЛЯЮЩАЯ ШЛЯПА -->
+  <section id="quiz" class="active">
+    <h2>Распределяющая шляпа</h2>
+    <div id="quiz-container" class="quiz-box"></div>
+  </section>
+
+  <!-- ТЕСТ НА ПАТРОНУС -->
+  <section id="patronus">
+    <h2>Тест на патронус</h2>
+    <div id="patronus-container" class="quiz-box"></div>
+  </section>
+
+  <!-- ГЕНЕРАТОР ПАЛОЧКИ -->
+  <section id="wand">
+    <h2>Генератор палочки</h2>
+    <div class="wand-box">
+      <div class="wand-field">
+        <label for="wand-wood">🪵 Древесина</label>
+        <select id="wand-wood">
+          <option value="Дуб">Дуб</option>
+          <option value="Боярышник">Боярышник</option>
+          <option value="Бузина">Бузина</option>
+          <option value="Тис">Тис</option>
+          <option value="Падуб">Падуб</option>
+          <option value="Орех">Орех</option>
+          <option value="Рябина">Рябина</option>
+          <option value="Ясень">Ясень</option>
+          <option value="Вишня">Вишня</option>
+          <option value="Клён">Клён</option>
+          <option value="Груша">Груша</option>
+          <option value="Ива">Ива</option>
+        </select>
+      </div>
+
+      <div class="wand-field">
+        <label for="wand-core">✨ Сердцевина</label>
+        <select id="wand-core">
+          <option value="перо феникса">Перо феникса</option>
+          <option value="волос единорога">Волос единорога</option>
+          <option value="сердечная жила дракона">Сердечная жила дракона</option>
+          <option value="волос вейлы">Волос вейлы</option>
+          <option value="усы кнезла">Усы кнезла</option>
+          <option value="чешуя руноследа">Чешуя руноследа</option>
+          <option value="перо гиппогрифа">Перо гиппогрифа</option>
+        </select>
+      </div>
+
+      <div class="wand-field">
+        <label for="wand-length">📏 Длина</label>
+        <select id="wand-length">
+          <option value="22">22 см</option>
+          <option value="24">24 см</option>
+          <option value="25">25 см</option>
+          <option value="27">27 см</option>
+          <option value="28">28 см</option>
+          <option value="30">30 см</option>
+          <option value="32">32 см</option>
+          <option value="35">35 см</option>
+        </select>
+      </div>
+
+      <div class="wand-field">
+        <label for="wand-flex">🌀 Гибкость</label>
+        <select id="wand-flex">
+          <option value="хрупкая">Хрупкая</option>
+          <option value="жёсткая">Жёсткая</option>
+          <option value="умеренно гибкая">Умеренно гибкая</option>
+          <option value="гибкая">Гибкая</option>
+          <option value="податливая">Податливая</option>
+          <option value="непреклонная">Непреклонная</option>
+        </select>
+      </div>
+
+      <div style="text-align:center;">
+        <button class="btn" onclick="createWand()">🪄 Создать палочку</button>
+      </div>
+
+      <div id="wand-result"></div>
+    </div>
+  </section>
+
+  <!-- ЗАКЛИНАНИЯ -->
+  <section id="spells">
+    <h2>Энциклопедия заклинаний</h2>
+    <input type="text" id="search" class="search-box" placeholder="🔍 Поиск заклинания...">
+    <div id="spell-list" class="spell-list"></div>
+  </section>
+
+  <!-- КОНТАКТЫ -->
+  <section id="contacts">
+    <h2>Мои контакты</h2>
+    <div class="contact-box">
+      <div class="contact-field">
+        <label for="contact-fio">👤 ФИО</label>
+        <!-- ДОБАВЛЕНО: предзаполненное ФИО -->
+        <input type="text" id="contact-fio" value="Фельцан Екатерина Анатольевна" placeholder="Фельцан Екатерина Анатольевна">
+      </div>
+      <div class="contact-field">
+        <label for="contact-email">📧 Email</label>
+        <input type="email" id="contact-email" placeholder="">
+      </div>
+      <div class="contact-field">
+        <label for="contact-phone">📱 Телефон</label>
+        <input type="tel" id="contact-phone" placeholder="+7 (999) 123-45-67">
+      </div>
+      <div class="contact-field">
+        <label for="contact-telegram">✈️ Telegram</label>
+        <input type="text" id="contact-telegram" placeholder="@username">
+      </div>
+      <div class="contact-field">
+        <label for="contact-about">📝 О себе</label>
+        <textarea id="contact-about" rows="3" placeholder="Пара слов о вас..."></textarea>
+      </div>
+
+      <div style="text-align:center;">
+        <button class="btn" onclick="saveContacts()">💾 Сохранить</button>
+      </div>
+
+      <div id="contact-result"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  Сделано с ⚡ для фанатов. Все права на вселенную принадлежат J.K. Rowling и Warner Bros.
+  <!-- ДОБАВЛЕНО: контакты автора -->
+  <div id="footer-contacts" class="footer-contact">
+    Автор: <strong>Фельцан Екатерина Анатольевна</strong>
+  </div>
+</footer>
+
+<script>
+// ===== НАВИГАЦИЯ =====
+const navButtons = document.querySelectorAll('nav button');
+navButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    navButtons.forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.section).classList.add('active');
+  });
+});
+
+// ======================================================
+// ===== ТЕСТ: РАСПРЕДЕЛЯЮЩАЯ ШЛЯПА =====
+// ======================================================
+const houseQuestions = [
+  {
+    q: "Ты нашёл кошелёк с деньгами на улице. Что сделаешь?",
+    answers: [
+      { text: "Верну владельцу, даже если придётся искать", scores: { hufflepuff: 2, gryffindor: 1 } },
+      { text: "Оставлю себе — мне нужнее", scores: { slytherin: 2 } },
+      { text: "Отдам в полицию, но прежде изучу, откуда он", scores: { ravenclaw: 2 } },
+      { text: "Попробую выяснить, кто потерял, через знакомых", scores: { gryffindor: 2 } }
+    ]
+  },
+  {
+    q: "Какой предмет в Хогвартсе тебе ближе всего?",
+    answers: [
+      { text: "Защита от тёмных искусств", scores: { gryffindor: 2 } },
+      { text: "Зельеварение", scores: { slytherin: 2 } },
+      { text: "История магии", scores: { ravenclaw: 2 } },
+      { text: "Травология", scores: { hufflepuff: 2 } }
+    ]
+  },
+  {
+    q: "Твой главный недостаток?",
+    answers: [
+      { text: "Слишком вспыльчив(а)", scores: { gryffindor: 2 } },
+      { text: "Слишком амбициозен(на)", scores: { slytherin: 2 } },
+      { text: "Слишком много думаю", scores: { ravenclaw: 2 } },
+      { text: "Слишком доверчив(а)", scores: { hufflepuff: 2 } }
+    ]
+  },
+  {
+    q: "Если бы у тебя был шанс стать невидимым на час, ты бы...",
+    answers: [
+      { text: "Подшутил(а) над друзьями", scores: { gryffindor: 2 } },
+      { text: "Подслушал(а) чужие секреты", scores: { slytherin: 2 } },
+      { text: "Пробрался(ась) в запретную секцию библиотеки", scores: { ravenclaw: 2 } },
+      { text: "Помог(ла) кому-то незаметно", scores: { hufflepuff: 2 } }
+    ]
+  },
+  {
+    q: "Что для тебя важнее всего?",
+    answers: [
+      { text: "Смелость и честь", scores: { gryffindor: 2 } },
+      { text: "Власть и успех", scores: { slytherin: 2 } },
+      { text: "Мудрость и знания", scores: { ravenclaw: 2 } },
+      { text: "Дружба и верность", scores: { hufflepuff: 2 } }
+    ]
+  }
+];
+
+const houses = {
+  gryffindor: {
+    name: "ГРИФФИНДОР", crest: "🦁",
+    desc: "Смелость, отвага и рыцарство — вот что ценит Гриффиндор. Его обитатели не боятся опасностей и всегда готовы встать на защиту слабых.",
+    cssClass: "gryffindor"
+  },
+  slytherin: {
+    name: "СЛИЗЕРИН", crest: "🐍",
+    desc: "Амбиции, хитрость и решительность ведут тебя в Слизерин. Здесь ценят тех, кто умеет добиваться своего.",
+    cssClass: "slytherin"
+  },
+  ravenclaw: {
+    name: "КОГТЕВРАН", crest: "🦅",
+    desc: "Ум, находчивость и любовь к знаниям — твои главные качества. В Когтевране чтят учёность и остроумие.",
+    cssClass: "ravenclaw"
+  },
+  hufflepuff: {
+    name: "ПУФФЕНДУЙ", crest: "🦡",
+    desc: "Трудолюбие, верность и доброта — ты настоящий Пуффендуй. Здесь уважают всех, кто честен и предан своему делу.",
+    cssClass: "hufflepuff"
+  }
+};
+
+let currentQ = 0;
+let scores = { gryffindor: 0, slytherin: 0, ravenclaw: 0, hufflepuff: 0 };
+const quizContainer = document.getElementById('quiz-container');
+
+function renderHouseQuestion() {
+  if (currentQ >= houseQuestions.length) { showHouseResult(); return; }
+  const q = houseQuestions[currentQ];
+  quizContainer.innerHTML = `
+    <div class="question">${q.q}</div>
+    <div class="answers">
+      ${q.answers.map((a, i) => `<button data-index="${i}">${a.text}</button>`).join('')}
+    </div>
+    <div class="progress"><div class="progress-bar" style="width: ${(currentQ/houseQuestions.length)*100}%"></div></div>
+    <p class="counter">Вопрос ${currentQ+1} из ${houseQuestions.length}</p>
+  `;
+  quizContainer.querySelectorAll('.answers button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const answer = q.answers[btn.dataset.index];
+      for (const [house, pts] of Object.entries(answer.scores)) scores[house] += pts;
+      currentQ++;
+      renderHouseQuestion();
+    });
+  });
+}
+
+function showHouseResult() {
+  let winner = Object.keys(scores).reduce((a, b) => scores[a] >= scores[b] ? a : b);
+  const house = houses[winner];
+  quizContainer.innerHTML = `
+    <div class="result">
+      <div class="crest">${house.crest}</div>
+      <div class="house-name ${house.cssClass}">${house.name}</div>
+      <div class="house-desc">${house.desc}</div>
+      <p class="scores">🦁 ${scores.gryffindor} | 🐍 ${scores.slytherin} | 🦅 ${scores.ravenclaw} | 🦡 ${scores.hufflepuff}</p>
+      <button class="btn" onclick="restartHouseQuiz()">Пройти заново</button>
+    </div>
+  `;
+}
+
+function restartHouseQuiz() {
+  currentQ = 0;
+  scores = { gryffindor: 0, slytherin: 0, ravenclaw: 0, hufflepuff: 0 };
+  renderHouseQuestion();
+}
+
+renderHouseQuestion();
+
+// ======================================================
+// ===== ТЕСТ: ПАТРОНУС =====
+// ======================================================
+const patronusQuestions = [
+  {
+    q: "Какое воспоминание ты бы выбрал для патронуса?",
+    answers: [
+      { text: "Первый полёт на метле", scores: { phoenix: 2, dragon: 1 } },
+      { text: "Тёплый вечер с семьёй", scores: { otter: 2, doe: 1 } },
+      { text: "Момент, когда я помог другу", scores: { stag: 2, wolf: 1 } },
+      { text: "Победа в трудной битве", scores: { lion: 2, dragon: 1 } }
+    ]
+  },
+  {
+    q: "Какое качество ты ценишь больше всего?",
+    answers: [
+      { text: "Свобода и независимость", scores: { wolf: 2, phoenix: 1 } },
+      { text: "Верность и преданность", scores: { stag: 2, otter: 1 } },
+      { text: "Мудрость и терпение", scores: { owl: 2, doe: 1 } },
+      { text: "Сила и решительность", scores: { dragon: 2, lion: 1 } }
+    ]
+  },
+  {
+    q: "Как ты ведёшь себя в опасности?",
+    answers: [
+      { text: "Бросаюсь защищать близких", scores: { lion: 2, wolf: 1 } },
+      { text: "Сохраняю спокойствие и ищу выход", scores: { owl: 2, phoenix: 1 } },
+      { text: "Действую по интуиции", scores: { otter: 2, doe: 1 } },
+      { text: "Стою до конца, что бы ни случилось", scores: { stag: 2, dragon: 1 } }
+    ]
+  },
+  {
+    q: "Какое место тебе ближе?",
+    answers: [
+      { text: "Запретный лес", scores: { wolf: 2, stag: 1 } },
+      { text: "Берег Чёрного озера", scores: { otter: 2, doe: 1 } },
+      { text: "Высокие башни Хогвартса", scores: { owl: 2, phoenix: 1 } },
+      { text: "Горы и открытое небо", scores: { dragon: 2, lion: 1 } }
+    ]
+  },
+  {
+    q: "Какой у тебя характер?",
+    answers: [
+      { text: "Вспыльчивый, но благородный", scores: { lion: 2, dragon: 1 } },
+      { text: "Тихий, но верный", scores: { doe: 2, stag: 1 } },
+      { text: "Любопытный и живой", scores: { otter: 2, owl: 1 } },
+      { text: "Одинокий, но свободный", scores: { wolf: 2, phoenix: 1 } }
+    ]
+  }
+];
+
+const patronuses = {
+  stag: {
+    animal: "Олень", emoji: "🦌",
+    desc: "Твой патронус — олень, символ благородства, защиты и верной дружбы. Такой патронус оберегает тех, кто тебе дорог, и ведёт за собой."
+  },
+  otter: {
+    animal: "Выдра", emoji: "🦦",
+    desc: "Твой патронус — выдра, олицетворение игривости, лёгкости и жизнерадостности. Ты умеешь находить радость даже в тёмные времена."
+  },
+  phoenix: {
+    animal: "Феникс", emoji: "🔥",
+    desc: "Твой патронус — феникс, символ возрождения и надежды. Ты способен подниматься из пепла и дарить свет другим."
+  },
+  wolf: {
+    animal: "Волк", emoji: "🐺",
+    desc: "Твой патронус — волк, олицетворение независимости и верности своим. Ты сильный одиночка, но за своих готов стоять насмерть."
+  },
+  doe: {
+    animal: "Лань", emoji: "🦌",
+    desc: "Твой патронус — лань, символ любви, нежности и тихой силы. Ты защищаешь тех, кого любишь, даже если это кажется невозможным."
+  },
+  owl: {
+    animal: "Сова", emoji: "🦉",
+    desc: "Твой патронус — сова, олицетворение мудрости и проницательности. Ты видишь суть вещей и умеешь находить выход там, где другие сдаются."
+  },
+  dragon: {
+    animal: "Дракон", emoji: "🐉",
+    desc: "Твой патронус — дракон, символ невероятной силы и решимости. Ты сокрушаешь любые преграды и не боишься никого."
+  },
+  lion: {
+    animal: "Лев", emoji: "🦁",
+    desc: "Твой патронус — лев, олицетворение храбрости и благородства. Ты настоящий защитник, и твоё сердце горит огнём справедливости."
+  }
+};
+
+let patronusQ = 0;
+let patronusScores = { stag:0, otter:0, phoenix:0, wolf:0, doe:0, owl:0, dragon:0, lion:0 };
+const patronusContainer = document.getElementById('patronus-container');
+
+function renderPatronusQuestion() {
+  if (patronusQ >= patronusQuestions.length) { showPatronusResult(); return; }
+  const q = patronusQuestions[patronusQ];
+  patronusContainer.innerHTML = `
+    <div class="question">${q.q}</div>
+    <div class="answers">
+      ${q.answers.map((a, i) => `<button data-index="${i}">${a.text}</button>`).join('')}
+    </div>
+    <div class="progress"><div class="progress-bar" style="width: ${(patronusQ/patronusQuestions.length)*100}%"></div></div>
+    <p class="counter">Вопрос ${patronusQ+1} из ${patronusQuestions.length}</p>
+  `;
+  patronusContainer.querySelectorAll('.answers button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const answer = q.answers[btn.dataset.index];
+      for (const [animal, pts] of Object.entries(answer.scores)) patronusScores[animal] += pts;
+      patronusQ++;
+      renderPatronusQuestion();
+    });
+  });
+}
+
+function showPatronusResult() {
+ 
